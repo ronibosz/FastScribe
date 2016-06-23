@@ -3,23 +3,21 @@ package application;
 import java.io.File;
 import java.net.URL;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.ResourceBundle;
 
 
 //
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
@@ -53,7 +51,7 @@ public class MainController implements Initializable
 	
 	public void playpause (ActionEvent event)
 	{
-		if (mediaFile != null)
+		if (media != null)
 			if (mp.getStatus() != Status.PLAYING)
 			{
 				mp.play();
@@ -69,19 +67,19 @@ public class MainController implements Initializable
 	
 	public void stop (ActionEvent event)
 	{
-		if (mediaFile != null)
+		if (media != null)
 			mp.stop();
 	}
 	
 	public void forward (ActionEvent event)
 	{
-		if (mediaFile != null)
+		if (media != null)
 			mp.seek(mp.getCurrentTime().add(Duration.seconds(3)));
 	}
 	
 	public void rewind (ActionEvent event)
 	{
-		if (mediaFile != null)
+		if (media != null)
 			mp.seek(mp.getCurrentTime().add(Duration.seconds(-3)));
 	}
 	
@@ -90,7 +88,10 @@ public class MainController implements Initializable
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setInitialDirectory(new File("/home/rosz/Downloads"));
 		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("mp3 files", "*.mp3"));
+		
 		mediaFile = fileChooser.showOpenDialog(null);
+		if (mediaFile !=null)
+		{
 		media = new Media(mediaFile.toURI().toString());
 		
 		
@@ -119,7 +120,6 @@ public class MainController implements Initializable
 						
 						else
 						{
-//							mp.seek(Duration.seconds(0));
 							slider.setValue(0);
 						}
 						
@@ -141,7 +141,6 @@ public class MainController implements Initializable
 						}
 						else
 						{
-//							mp.seek(Duration.seconds(0));
 							slider.setValue(0);
 						}
 					}
@@ -175,11 +174,7 @@ public class MainController implements Initializable
 				
 			}
 		});
-		
-		
-
-		
-		
+		}
 	}
 	
 	
@@ -187,9 +182,16 @@ public class MainController implements Initializable
 	{
 		double sum;				
 		sum =  dur.toSeconds();
-		LocalTime ltime = LocalTime.ofSecondOfDay((long) sum);
 		
-		return(ltime.toString());
+		if (sum < 1)
+		{
+			return "00:00:00";
+		}
+		else
+		{
+			LocalTime ltime = LocalTime.ofSecondOfDay((long) sum);
+			return(ltime.toString());
+		}
 	}
 
 }
