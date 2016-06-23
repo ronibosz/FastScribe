@@ -81,7 +81,7 @@
                               <Insets right="1.0" />
                            </HBox.margin>
                         </Button>
-                        <Button fx:id="forwButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#forward" prefHeight="40.0" prefWidth="40.0" text="for">
+                        <Button fx:id="forwButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="for">
                            <HBox.margin>
                               <Insets right="1.0" />
                            </HBox.margin>

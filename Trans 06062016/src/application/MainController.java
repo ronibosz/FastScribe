@@ -5,6 +5,7 @@ import java.net.URL;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 
@@ -18,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
@@ -180,18 +182,14 @@ public class MainController implements Initializable
 	
 	private String durationToString (Duration dur) 
 	{
-		double sum;				
-		sum =  dur.toSeconds();
+		double sum =  dur.toSeconds();
+
+		LocalTime ltime = LocalTime.ofSecondOfDay((long) sum);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+		String sTime = formatter.format(ltime);
 		
-		if (sum < 1)
-		{
-			return "00:00:00";
-		}
-		else
-		{
-			LocalTime ltime = LocalTime.ofSecondOfDay((long) sum);
-			return(ltime.toString());
-		}
+		return sTime;
+		
 	}
 
 }
