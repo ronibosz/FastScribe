@@ -4,6 +4,8 @@ import java.io.File;
 import java.net.URL;
 import java.time.LocalTime;
 import java.util.ResourceBundle;
+
+
 //
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -20,6 +22,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer.Status;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.Duration;
@@ -51,11 +54,17 @@ public class MainController implements Initializable
 	public void playpause (ActionEvent event)
 	{
 		if (mediaFile != null)
-		{
+			if (mp.getStatus() != Status.PLAYING)
+			{
+				mp.play();
+				System.out.println(mp.getStatus());
+			} 
 			
-			mp.play();
-			
-		}
+			else
+			{
+				mp.pause();
+
+			}
 	}
 	
 	public void stop (ActionEvent event)
@@ -103,9 +112,15 @@ public class MainController implements Initializable
 					
 					@Override
 					public void invalidated(Observable observable) {
-						if (! slider.isValueChanging())
+						if (!slider.isValueChanging() && (mp.getStatus() == Status.PLAYING || mp.getStatus() == Status.PAUSED))
 						{
 							mp.seek(Duration.seconds(slider.getValue()));
+						}
+						
+						else
+						{
+//							mp.seek(Duration.seconds(0));
+							slider.setValue(0);
 						}
 						
 					}
@@ -116,13 +131,19 @@ public class MainController implements Initializable
 					
 					@Override
 					public void invalidated(Observable observable) {
-//						if (! slider.isValueChanging())	
-//						{
+//						if (!slider.isValueChanging() && (mp.getStatus() == Status.PLAYING || mp.getStatus() == Status.PAUSED))
+						if (mp.getStatus() == Status.PLAYING || mp.getStatus() == Status.PAUSED)
+						{
 							if (Math.abs(mp.getCurrentTime().toSeconds() - slider.getValue()) > 1)
 							{
 								mp.seek(Duration.seconds(slider.getValue()));
 							}
-//						}
+						}
+						else
+						{
+//							mp.seek(Duration.seconds(0));
+							slider.setValue(0);
+						}
 					}
 				});
 				
