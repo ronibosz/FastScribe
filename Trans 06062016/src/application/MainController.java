@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
+import org.omg.CORBA.PUBLIC_MEMBER;
 
 //
 import javafx.beans.InvalidationListener;
@@ -42,6 +43,7 @@ public class MainController implements Initializable
 	private MediaPlayer mp;
 	private File mediaFile;
 	private Duration mediaDuration;
+	private boolean firstOpen;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) 
@@ -50,7 +52,8 @@ public class MainController implements Initializable
 		durationLbl.setText("hh:mm:ss");
 		slider.setDisable(true);
 		volumeSlider.setValue(0.8);
-		
+		rateSlider.setValue(1);
+		firstOpen = false;
 	}
 	
 	public void playpause (ActionEvent event)
@@ -65,7 +68,6 @@ public class MainController implements Initializable
 			else
 			{
 				mp.pause();
-
 			}
 	}
 	
@@ -87,131 +89,99 @@ public class MainController implements Initializable
 			mp.seek(mp.getCurrentTime().add(Duration.seconds(-3)));
 	}
 	
-	public void openAction (ActionEvent event)
+	public void volumeSliderInit()
 	{
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.setInitialDirectory(new File("/home/rosz/Downloads"));
-		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("*.mp3, *.mp4, *.m4a, *.wav, *.aiff, *.aif", "*.mp3", "*.mp4", "*.m4a", "*.wav", "*.aiff", "*.aif"));
-		
-		mediaFile = fileChooser.showOpenDialog(null);
-		if (mediaFile !=null)
-		{	
-			
-		media = new Media(mediaFile.toURI().toString());
-		fileName.setText(media.getSource().replaceAll("%20", " "));
-		
-		mp = new MediaPlayer(media);
-		
-		if (mp.getStatus() == Status.PLAYING)
-		{
-			mp.stop();
-		}
-		
-		mp.setOnReady(new Runnable() {
-			public void run() {
-				mediaDuration = media.getDuration();
-				timeLbl.setText(durationToString(mp.getCurrentTime()));
-				durationLbl.setText(durationToString(mediaDuration));
-			
-				System.out.println(String.valueOf((long)mediaDuration.toSeconds()));
-				
-				/*volume slider*/
-				
-				mp.setVolume(volumeSlider.getValue());
-				volumeSlider.valueProperty().addListener(new InvalidationListener() {
-					
-					@Override
-					public void invalidated(Observable observable) {
-						mp.setVolume(volumeSlider.getValue());
-						
-					}
-				});
-				
-				/*rate slider*/
-				rateSlider.setValue(1);
-				rateSlider.valueProperty().addListener(new InvalidationListener() {
-					
-					@Override
-					public void invalidated(Observable observable) {
-						mp.setRate(rateSlider.getValue());
-						
-					}
-				});
-				
-				/*progress slider*/
-				slider.setDisable(false);
-				slider.setMax(mp.getTotalDuration().toSeconds());
-				
-				////////////////////////przesuwanie slidera
-				slider.valueChangingProperty().addListener(new InvalidationListener() {
-					
-					@Override
-					public void invalidated(Observable observable) {
-						if (!slider.isValueChanging() && (mp.getStatus() == Status.PLAYING || mp.getStatus() == Status.PAUSED))
-						{
-							mp.seek(Duration.seconds(slider.getValue()));
-						}
-						
-						else
-						{
-							slider.setValue(0);
-						}
-						
-					}
-				});
-				
-				////////////////////////kliknięcie w slider
-				slider.valueProperty().addListener(new InvalidationListener() {
-					
-					@Override
-					public void invalidated(Observable observable) {
-//						if (!slider.isValueChanging() && (mp.getStatus() == Status.PLAYING || mp.getStatus() == Status.PAUSED))
-						if (mp.getStatus() == Status.PLAYING || mp.getStatus() == Status.PAUSED)
-						{
-							if (Math.abs(mp.getCurrentTime().toSeconds() - slider.getValue()) > 1)
-							{
-								mp.seek(Duration.seconds(slider.getValue()));
-							}
-						}
-						else
-						{
-							slider.setValue(0);
-						}
-					}
-				});
-				
-				//////////////////////
-				mp.currentTimeProperty().addListener(new InvalidationListener() 
-				{
-					
-					@Override
-					public void invalidated(Observable observable) 
-					{
-						if (! slider.isValueChanging())						//jesli uzytkownik nie porusza sliderem
-						{
-							slider.setValue(mp.getCurrentTime().toSeconds());
-						}
-						
-						timeLbl.setText(durationToString(mp.getCurrentTime()));
-					}
-				});
-				
-			}
-		});
-		
-		mp.setOnEndOfMedia(new Runnable() {
-			
+		mp.setVolume(volumeSlider.getValue());
+		volumeSlider.valueProperty().addListener(new InvalidationListener() 
+		{			
 			@Override
-			public void run() {
-				mp.stop();
-				mp.seek(Duration.ZERO);
-				
+			public void invalidated(Observable observable) 
+			{
+				mp.setVolume(volumeSlider.getValue());
 			}
 		});
-		}
-		
 	}
 	
+	public void rateSliderInit()
+	{
+			rateSlider.valueProperty().addListener(new InvalidationListener() 
+			{			
+				@Override
+				public void invalidated(Observable observable) 
+				{
+					mp.setRate(rateSlider.getValue());	
+				}
+			});
+	}
+	
+	public void progressSliderInit()
+	{
+		slider.setDisable(false);
+		
+		/*on slider move*/
+		slider.valueChangingProperty().addListener(new InvalidationListener() 
+		{
+			@Override
+			public void invalidated(Observable observable) 
+			{
+				if (!slider.isValueChanging() && (mp.getStatus() == Status.PLAYING || mp.getStatus() == Status.PAUSED))
+				{
+					mp.seek(Duration.seconds(slider.getValue()));
+				}
+				
+				else
+				{
+					slider.setValue(0);
+				}
+			}
+		});
+		
+		/*on slider click*/
+		slider.valueProperty().addListener(new InvalidationListener() 
+		{
+			@Override
+			public void invalidated(Observable observable) 
+			{
+				if (mp.getStatus() == Status.PLAYING || mp.getStatus() == Status.PAUSED)
+				{
+					if (Math.abs(mp.getCurrentTime().toSeconds() - slider.getValue()) > 1)
+					{
+						mp.seek(Duration.seconds(slider.getValue()));
+					}
+				}
+				
+				else
+				{
+					slider.setValue(0);
+				}
+			}
+		});
+		
+		/*moving slider*/
+		mp.currentTimeProperty().addListener(new InvalidationListener() 
+		{
+			@Override
+			public void invalidated(Observable observable) 
+			{
+				if (! slider.isValueChanging())	
+				{
+					slider.setValue(mp.getCurrentTime().toSeconds());
+				}
+				
+				timeLbl.setText(durationToString(mp.getCurrentTime()));
+			}
+		});
+	}
+	
+	public void mediaPlayerInit()
+	{
+		mp = new MediaPlayer(media);
+		volumeSliderInit();
+		rateSliderInit();
+		progressSliderInit();					
+		fileName.setText(media.getSource().replaceAll("%20", " "));
+		rateSlider.setValue(1);
+	}
 	
 	private String durationToString (Duration dur) 
 	{
@@ -222,5 +192,51 @@ public class MainController implements Initializable
 		
 		return sTime;
 	}
-
+	
+	
+	
+	public void openAction (ActionEvent event)
+	{
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setInitialDirectory(new File("/home/rosz/Downloads"));
+		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("*.mp3, *.mp4, *.m4a, *.wav, *.aiff, *.aif", "*.mp3", "*.mp4", "*.m4a", "*.wav", "*.aiff", "*.aif"));
+		mediaFile = fileChooser.showOpenDialog(null);
+		
+		
+		if (mediaFile !=null)		
+		{				
+			media = new Media(mediaFile.toURI().toString());
+			
+			if (firstOpen)
+			{
+				if (mp.getStatus() == Status.PLAYING)
+					mp.stop();				
+			}
+			else
+				firstOpen = true;
+			
+			mediaPlayerInit();			
+		
+			mp.setOnReady(new Runnable() 
+			{
+				public void run() 
+				{
+					mediaDuration = media.getDuration();
+					timeLbl.setText(durationToString(mp.getCurrentTime()));
+					durationLbl.setText(durationToString(mediaDuration));
+					slider.setMax(mp.getTotalDuration().toSeconds());
+				}
+			});
+		
+			mp.setOnEndOfMedia(new Runnable() 
+			{
+				@Override
+				public void run() 
+				{
+					mp.stop();
+					mp.seek(Duration.ZERO);
+				}
+			});
+		}
+	}
 }
