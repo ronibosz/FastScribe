@@ -4,8 +4,6 @@ import java.io.File;
 import java.net.URL;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 
@@ -19,7 +17,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
@@ -34,8 +31,11 @@ public class MainController implements Initializable
 	@FXML Button rewButton;
 	@FXML Button forwButton;
 	@FXML Slider slider;
+	@FXML Slider rateSlider;
+	@FXML Slider volumeSlider;
 	@FXML Label timeLbl;
 	@FXML Label durationLbl;
+	@FXML Label fileName;
 	@FXML TextArea text;
 	
 	private Media media;
@@ -49,6 +49,8 @@ public class MainController implements Initializable
 		timeLbl.setText("hh:mm:ss");
 		durationLbl.setText("hh:mm:ss");
 		slider.setDisable(true);
+		volumeSlider.setValue(0.8);
+		
 	}
 	
 	public void playpause (ActionEvent event)
@@ -89,16 +91,22 @@ public class MainController implements Initializable
 	{
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setInitialDirectory(new File("/home/rosz/Downloads"));
-		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("mp3 files", "*.mp3"));
+		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("*.mp3, *.mp4, *.m4a, *.wav, *.aiff, *.aif", "*.mp3", "*.mp4", "*.m4a", "*.wav", "*.aiff", "*.aif"));
 		
 		mediaFile = fileChooser.showOpenDialog(null);
 		if (mediaFile !=null)
-		{
+		{	
+			
 		media = new Media(mediaFile.toURI().toString());
-		
-		
+		fileName.setText(media.getSource().replaceAll("%20", " "));
 		
 		mp = new MediaPlayer(media);
+		
+		if (mp.getStatus() == Status.PLAYING)
+		{
+			mp.stop();
+		}
+		
 		mp.setOnReady(new Runnable() {
 			public void run() {
 				mediaDuration = media.getDuration();
@@ -107,6 +115,30 @@ public class MainController implements Initializable
 			
 				System.out.println(String.valueOf((long)mediaDuration.toSeconds()));
 				
+				/*volume slider*/
+				
+				mp.setVolume(volumeSlider.getValue());
+				volumeSlider.valueProperty().addListener(new InvalidationListener() {
+					
+					@Override
+					public void invalidated(Observable observable) {
+						mp.setVolume(volumeSlider.getValue());
+						
+					}
+				});
+				
+				/*rate slider*/
+				rateSlider.setValue(1);
+				rateSlider.valueProperty().addListener(new InvalidationListener() {
+					
+					@Override
+					public void invalidated(Observable observable) {
+						mp.setRate(rateSlider.getValue());
+						
+					}
+				});
+				
+				/*progress slider*/
 				slider.setDisable(false);
 				slider.setMax(mp.getTotalDuration().toSeconds());
 				
@@ -177,19 +209,18 @@ public class MainController implements Initializable
 			}
 		});
 		}
+		
 	}
 	
 	
 	private String durationToString (Duration dur) 
 	{
 		double sum =  dur.toSeconds();
-
 		LocalTime ltime = LocalTime.ofSecondOfDay((long) sum);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 		String sTime = formatter.format(ltime);
 		
 		return sTime;
-		
 	}
 
 }

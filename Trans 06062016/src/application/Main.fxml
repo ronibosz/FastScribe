@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.BorderPane?>
@@ -13,6 +14,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="200.0" minWidth="200.0" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
    <top>
@@ -38,16 +40,21 @@
       </MenuBar>
    </top>
    <bottom>
-      <Slider fx:id="slider" minWidth="0.0" prefHeight="36.0" prefWidth="10.0" BorderPane.alignment="CENTER">
+      <VBox BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets left="10.0" right="10.0" />
          </BorderPane.margin>
-      </Slider>
+         <children>
+            <Slider fx:id="slider" minWidth="0.0" prefHeight="36.0" prefWidth="10.0" />
+            <Separator prefWidth="200.0" />
+            <Label fx:id="fileName" minHeight="30.0" />
+         </children>
+      </VBox>
    </bottom>
    <center>
       <GridPane BorderPane.alignment="CENTER">
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="175.0" minWidth="175.0" prefWidth="175.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="453.0" />
          </columnConstraints>
          <rowConstraints>
@@ -59,12 +66,14 @@
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="70.0" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="206.0" minHeight="10.0" prefHeight="156.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="105.0" minHeight="10.0" prefHeight="92.0" vgrow="NEVER" />
+                <RowConstraints minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="80.0" minHeight="80.0" prefHeight="80.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="NEVER" />
               </rowConstraints>
                <children>
-                  <HBox alignment="BOTTOM_LEFT" prefHeight="62.0" prefWidth="175.0" GridPane.rowIndex="2">
+                  <HBox alignment="BOTTOM_LEFT" prefHeight="62.0" prefWidth="175.0" GridPane.rowIndex="4">
                      <children>
                         <Button fx:id="rewButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#rewind" prefHeight="40.0" prefWidth="40.0" text="re">
                            <HBox.margin>
@@ -81,20 +90,73 @@
                               <Insets right="1.0" />
                            </HBox.margin>
                         </Button>
-                        <Button fx:id="forwButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="for">
+                        <Button fx:id="forwButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#forward" prefHeight="40.0" prefWidth="40.0" text="for">
                            <HBox.margin>
                               <Insets right="1.0" />
                            </HBox.margin>
                         </Button>
                      </children>
                   </HBox>
-                  <HBox alignment="BOTTOM_CENTER" prefHeight="168.0" prefWidth="175.0" GridPane.rowIndex="1">
+                  <VBox GridPane.rowIndex="3">
                      <children>
-                        <Label fx:id="timeLbl" />
-                        <Label text="/" />
-                        <Label fx:id="durationLbl" />
+                        <HBox alignment="BOTTOM_LEFT" prefHeight="168.0" prefWidth="175.0">
+                           <children>
+                              <Label fx:id="timeLbl" />
+                              <Label text="/" />
+                              <Label fx:id="durationLbl" />
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" top="20.0" />
+                           </padding>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                        </HBox>
+                        <Separator prefWidth="200.0">
+                           <padding>
+                              <Insets left="10.0" right="1.0" />
+                           </padding>
+                        </Separator>
                      </children>
-                  </HBox>
+                  </VBox>
+                  <VBox prefHeight="78.0" prefWidth="175.0" GridPane.rowIndex="1">
+                     <children>
+                        <Slider fx:id="rateSlider" blockIncrement="0.05" majorTickUnit="0.2" max="1.2" min="0.4" minorTickCount="4" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1.0">
+                           <padding>
+                              <Insets left="10.0" right="1.0" top="10.0" />
+                           </padding>
+                        </Slider>
+                        <Label text="Rate">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
+                           </padding>
+                        </Label>
+                        <Separator prefWidth="200.0">
+                           <padding>
+                              <Insets left="10.0" right="1.0" />
+                           </padding>
+                        </Separator>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="78.0" prefWidth="175.0" GridPane.rowIndex="2">
+                     <children>
+                        <Slider fx:id="volumeSlider" max="1.0" value="0.8">
+                           <padding>
+                              <Insets left="10.0" right="1.0" top="30.0" />
+                           </padding>
+                        </Slider>
+                        <Label text="Volume">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
+                           </padding>
+                        </Label>
+                        <Separator prefWidth="200.0">
+                           <padding>
+                              <Insets left="10.0" right="1.0" />
+                           </padding>
+                        </Separator>
+                     </children>
+                  </VBox>
                </children>
             </GridPane>
             <GridPane GridPane.columnIndex="1">
