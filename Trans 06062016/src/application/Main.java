@@ -19,11 +19,19 @@ public class Main extends Application
 	{
 		try 
 		{
-			Parent root = FXMLLoader.load(getClass().getResource("/application/Main.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/application/Main.fxml"));
+			Parent root = (Parent)loader.load();
+			MainController controller = (MainController)loader.getController();
+			
+//			
+//				
+//			Parent root = FXMLLoader.load(getClass().getResource("/application/Main.fxml"));
 			Scene scene = new Scene(root, width*2/3,height*4/5);
-					
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			
+			controller.setupListeners(primaryStage);
+			
 		} catch(Exception e) 
 			{
 				e.printStackTrace();

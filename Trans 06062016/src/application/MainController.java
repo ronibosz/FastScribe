@@ -1,28 +1,33 @@
 package application;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
-
-//
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class MainController implements Initializable
@@ -44,6 +49,12 @@ public class MainController implements Initializable
 	private File mediaFile;
 	private Duration mediaDuration;
 	private boolean firstOpen;
+	private KeyCombination rewKeyComb;
+	private KeyCombination forwKeyComb;
+	private KeyCombination playKeyComb;
+	private KeyCombination stopKeyComb;
+	Stage controllerStage;
+
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) 
@@ -54,7 +65,37 @@ public class MainController implements Initializable
 		volumeSlider.setValue(0.8);
 		rateSlider.setValue(1);
 		firstOpen = false;
+		
 	}
+	
+	public void setupListeners(Stage stage)
+	{
+		controllerStage = stage;
+		rewKeyComb = new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN);
+		forwKeyComb = new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN);
+		playKeyComb = new KeyCodeCombination(KeyCode.SPACE, KeyCombination.CONTROL_DOWN);
+		stopKeyComb = new KeyCodeCombination(KeyCode.SPACE, KeyCombination.CONTROL_DOWN, KeyCombination.ALT_DOWN);
+		
+		controllerStage.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent ke) 
+			{
+				if (rewKeyComb.match(ke))
+					rewind(null);
+				
+				if (forwKeyComb.match(ke))
+					forward(null);
+				
+				if (playKeyComb.match(ke))
+					playpause(null);
+				
+				if (stopKeyComb.match(ke))
+					stop(null);
+			}
+		});
+	}
+
 	
 	public void playpause (ActionEvent event)
 	{
@@ -193,15 +234,42 @@ public class MainController implements Initializable
 		return sTime;
 	}
 	
-	
+	public void saveTxt (ActionEvent event)
+	{
+		FileChooser saveChooser = new FileChooser();
+		saveChooser.setTitle("Save As...");
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("*.txt", "*.txt");
+		saveChooser.getExtensionFilters().add(extFilter);
+		saveChooser.setInitialFileName(".txt");
+		
+		File saveFile = saveChooser.showSaveDialog(null);
+		
+		if (saveFile != null)
+		{
+			FileWriter fileWriter;
+			try 
+			{
+				fileWriter = new FileWriter(saveFile);
+				fileWriter.write(text.getText());
+				fileWriter.close();
+			}
+			
+			catch (IOException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
 	
 	public void openAction (ActionEvent event)
 	{
 		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open");
 		fileChooser.setInitialDirectory(new File("/home/rosz/Downloads"));
 		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("*.mp3, *.mp4, *.m4a, *.wav, *.aiff, *.aif", "*.mp3", "*.mp4", "*.m4a", "*.wav", "*.aiff", "*.aif"));
 		mediaFile = fileChooser.showOpenDialog(null);
-		
 		
 		if (mediaFile !=null)		
 		{				
@@ -239,4 +307,5 @@ public class MainController implements Initializable
 			});
 		}
 	}
+	
 }
