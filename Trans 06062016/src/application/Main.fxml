@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="200.0" minWidth="200.0" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
    <top>
@@ -22,7 +23,10 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openAction" text="Open..." />
+                  <MenuItem mnemonicParsing="false" onAction="#newFile" text="New" />
+                  <MenuItem mnemonicParsing="false" onAction="#openAction" text="Open sound file" />
+                  <MenuItem mnemonicParsing="false" onAction="#openTxt" text="Open .txt file" />
+                  <MenuItem fx:id="saveMI" mnemonicParsing="false" onAction="#save" text="Save" />
               <MenuItem fx:id="saveAsMI" mnemonicParsing="false" onAction="#saveTxt" text="Save as..." />
             </items>
           </Menu>
@@ -165,14 +169,22 @@
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints maxHeight="161.0" minHeight="10.0" prefHeight="28.0" vgrow="NEVER" />
-                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="305.0" valignment="TOP" vgrow="ALWAYS" />
+                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="305.0" valignment="TOP" vgrow="ALWAYS" />
               </rowConstraints>
                <children>
                   <TextArea fx:id="text" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="1.0" prefHeight="400.0" prefWidth="385.0" wrapText="true" GridPane.rowIndex="1" GridPane.valignment="TOP">
                      <GridPane.margin>
-                        <Insets left="20.0" right="20.0" top="20.0" />
+                        <Insets left="20.0" right="20.0" />
                      </GridPane.margin>
                   </TextArea>
+                  <Label fx:id="txtNameLbl" text="Label">
+                     <GridPane.margin>
+                        <Insets left="20.0" />
+                     </GridPane.margin>
+                     <font>
+                        <Font name="System Italic" size="13.0" />
+                     </font>
+                  </Label>
                </children>
             </GridPane>
          </children>
