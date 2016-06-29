@@ -11,7 +11,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.event.ActionEvent;
@@ -68,6 +69,7 @@ public class MainController implements Initializable
 	private KeyCombination stopKeyComb;
 	Stage controllerStage;
 	File txtFile;
+	File backupFile;
 
 	
 	@Override
@@ -81,8 +83,8 @@ public class MainController implements Initializable
 		rateSlider.setValue(1);
 		firstOpen = false;
 		saveMI.setDisable(true);
-		
-		
+		backupFile = new File("BackupTextFile000.txt");
+		backup();
 	}
 	
 	public void setupListeners(Stage stage)
@@ -129,7 +131,6 @@ public class MainController implements Initializable
 		});
 	}
 
-	
 	public void playpause (ActionEvent event)
 	{
 		if (media != null)
@@ -266,6 +267,7 @@ public class MainController implements Initializable
 		
 		return sTime;
 	}
+	
 	public boolean saveAlert()
 	{
 		ButtonType yesBT = new ButtonType("Yes");
@@ -323,6 +325,11 @@ public class MainController implements Initializable
 		txtChooser.getExtensionFilters().addAll(new ExtensionFilter("*.txt", "*.txt"));
 		txtFile = txtChooser.showOpenDialog(null);
 		text.setText(fileToString(txtFile));
+				
+		if (txtFile.getPath().equals(backupFile.getAbsolutePath()))
+			saveTxt(null);
+		
+		saveMI.setDisable(false);	
 	}
 	
 	public String fileToString(File file)
@@ -410,6 +417,33 @@ public class MainController implements Initializable
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void backup()
+	{
+		Timeline backupTimeline = new Timeline(new KeyFrame(Duration.seconds(30), new EventHandler<ActionEvent>() {
+
+		    @Override
+		    public void handle(ActionEvent event) 
+		    {
+		        FileWriter fileWriter;
+				try 
+				{
+					fileWriter = new FileWriter(backupFile);
+					fileWriter.write(text.getText());
+					fileWriter.close();
+				}
+				
+				catch (IOException e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		    }
+		}));
+		
+		backupTimeline.setCycleCount(Timeline.INDEFINITE);
+		backupTimeline.play();
 	}
 	
 	public void openAction (ActionEvent event)
