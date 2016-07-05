@@ -52,6 +52,7 @@ public class MainController implements Initializable
 	@FXML private Slider slider;
 	@FXML private Slider rateSlider;
 	@FXML private Slider volumeSlider;
+	@FXML private Slider timeSlider;
 	@FXML private Label timeLbl;
 	@FXML private Label durationLbl;
 	@FXML private Label fileName;
@@ -95,7 +96,8 @@ public class MainController implements Initializable
 		saveMI.setDisable(true);
 		setAccelerators();
 		
-		backupFile = new File(System.getProperty("user.dir") + "/BackupTextFile000.txt");
+//		backupFile = new File(System.getProperty("user.dir") + "/BackupTextFile000.txt");
+		backupFile = new File(System.getProperty("user.home") + "/BackupTextFile000.txt");
 		backup();
 	}
 	
@@ -223,13 +225,17 @@ public class MainController implements Initializable
 	public void forward (ActionEvent event)
 	{
 		if (media != null)
-			mp.seek(mp.getCurrentTime().add(Duration.seconds(3)));
+			mp.seek(mp.getCurrentTime().add(Duration.seconds(timeSlider.getValue())));
+		if (mp.getStatus() != Status.PLAYING)
+			mp.play();
 	}
 	
 	public void rewind (ActionEvent event)
 	{
 		if (media != null)
-			mp.seek(mp.getCurrentTime().add(Duration.seconds(-3)));
+			mp.seek(mp.getCurrentTime().add(Duration.seconds(-timeSlider.getValue())));
+		if (mp.getStatus() != Status.PLAYING)
+			mp.play();
 	}
 	
 	public void volumeSliderInit()
@@ -529,7 +535,7 @@ public class MainController implements Initializable
 				try 
 				{
 					fileWriter = new FileWriter(backupFile);
-					fileWriter.write(text.getText());
+					fileWriter.write(text.getText().replaceAll("\n", System.getProperty("line.separator")));
 					fileWriter.close();
 				}
 				
@@ -560,7 +566,8 @@ public class MainController implements Initializable
 			if (firstOpen)
 			{
 				if (mp.getStatus() == Status.PLAYING)
-					mp.stop();				
+					mp.stop();		
+					playButton.setGraphic(new ImageView("/media/playicon.png"));
 			}
 			else
 				firstOpen = true;
@@ -605,7 +612,7 @@ public class MainController implements Initializable
 		Alert shortcutsAlert = new Alert(AlertType.INFORMATION);
 		shortcutsAlert.setTitle("About");
 		shortcutsAlert.setHeaderText(null);
-		shortcutsAlert.setContentText("FastScribe 1.1.1");
+		shortcutsAlert.setContentText("FastScribe 1.1.3");
 		shortcutsAlert.showAndWait();
 	}
 }

@@ -67,7 +67,7 @@
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="70.0" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                <RowConstraints fillHeight="false" minHeight="60.0" prefHeight="60.0" valignment="BOTTOM" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="80.0" minHeight="80.0" prefHeight="80.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
@@ -166,6 +166,25 @@
                         <Separator prefWidth="200.0">
                            <padding>
                               <Insets left="10.0" right="1.0" />
+                           </padding>
+                        </Separator>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="78.0" prefWidth="175.0">
+                     <children>
+                        <Slider fx:id="timeSlider" blockIncrement="1.0" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="3.0">
+                           <padding>
+                              <Insets left="10.0" right="1.0" top="30.0" />
+                           </padding>
+                        </Slider>
+                        <Label text="Rew/Forw Time [s]">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
+                           </padding>
+                        </Label>
+                        <Separator prefWidth="200.0">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="1.0" />
                            </padding>
                         </Separator>
                      </children>
