@@ -9,6 +9,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -23,23 +24,19 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                  <MenuItem mnemonicParsing="false" onAction="#newFile" text="New" />
-                  <MenuItem mnemonicParsing="false" onAction="#openAction" text="Open sound file" />
-                  <MenuItem mnemonicParsing="false" onAction="#openTxt" text="Open .txt file" />
+                  <MenuItem fx:id="NewMI" mnemonicParsing="false" onAction="#newFile" text="New" />
+                  <MenuItem fx:id="openSoundMI" mnemonicParsing="false" onAction="#openAction" text="Open sound file" />
+                  <MenuItem fx:id="openTxtMI" mnemonicParsing="false" onAction="#openTxt" text="Open .txt file" />
                   <MenuItem fx:id="saveMI" mnemonicParsing="false" onAction="#save" text="Save" />
               <MenuItem fx:id="saveAsMI" mnemonicParsing="false" onAction="#saveTxt" text="Save as..." />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#shortcutsDialog" text="Shortcuts" />
+                  <MenuItem mnemonicParsing="false" onAction="#aboutDialog" text="About" />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
    </top>
@@ -77,27 +74,39 @@
                 <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="NEVER" />
               </rowConstraints>
                <children>
-                  <HBox alignment="BOTTOM_LEFT" prefHeight="62.0" prefWidth="175.0" GridPane.rowIndex="4">
+                  <HBox alignment="BOTTOM_CENTER" prefHeight="62.0" prefWidth="175.0" GridPane.rowIndex="4">
                      <children>
-                        <Button fx:id="rewButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#rewind" prefHeight="40.0" prefWidth="40.0" text="re">
+                        <Button fx:id="rewButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#rewind" prefHeight="40.0" prefWidth="40.0" textAlignment="CENTER">
                            <HBox.margin>
-                              <Insets left="10.0" right="1.0" />
+                              <Insets left="5.0" right="1.0" />
                            </HBox.margin>
+                           <tooltip>
+                              <Tooltip text="Ctrl+R" />
+                           </tooltip>
                         </Button>
-                        <Button fx:id="stopButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#stop" prefHeight="40.0" prefWidth="40.0" text="st">
+                        <Button fx:id="stopButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#stop" prefHeight="40.0" prefWidth="40.0" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS">
                            <HBox.margin>
                               <Insets right="1.0" />
                            </HBox.margin>
+                           <tooltip>
+                              <Tooltip text="Ctrl+F" />
+                           </tooltip>
                         </Button>
-                        <Button fx:id="playButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#playpause" prefHeight="40.0" prefWidth="40.0" text="pl">
+                        <Button fx:id="playButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#playpause" prefHeight="40.0" prefWidth="40.0">
                            <HBox.margin>
                               <Insets right="1.0" />
                            </HBox.margin>
+                           <tooltip>
+                              <Tooltip text="Ctrl+Space" />
+                           </tooltip>
                         </Button>
-                        <Button fx:id="forwButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#forward" prefHeight="40.0" prefWidth="40.0" text="for">
+                        <Button fx:id="forwButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#forward" prefHeight="40.0" prefWidth="40.0">
                            <HBox.margin>
-                              <Insets right="1.0" />
+                              <Insets />
                            </HBox.margin>
+                           <tooltip>
+                              <Tooltip text="Ctrl+Alt+Space" />
+                           </tooltip>
                         </Button>
                      </children>
                   </HBox>
