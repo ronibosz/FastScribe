@@ -25,10 +25,10 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
                   <MenuItem fx:id="NewMI" mnemonicParsing="false" onAction="#newFile" text="New" />
-                  <MenuItem fx:id="openSoundMI" mnemonicParsing="false" onAction="#openAction" text="Open sound file" />
+                  <MenuItem fx:id="openSoundMI" mnemonicParsing="false" onAction="#openSoundAction" text="Open sound file" />
                   <MenuItem fx:id="openTxtMI" mnemonicParsing="false" onAction="#openTxt" text="Open .txt file" />
                   <MenuItem fx:id="saveMI" mnemonicParsing="false" onAction="#save" text="Save" />
-              <MenuItem fx:id="saveAsMI" mnemonicParsing="false" onAction="#saveTxt" text="Save as..." />
+              <MenuItem fx:id="saveAsMI" mnemonicParsing="false" onAction="#saveAs" text="Save as..." />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Help">
@@ -89,7 +89,7 @@
                               <Insets right="1.0" />
                            </HBox.margin>
                            <tooltip>
-                              <Tooltip text="Ctrl+F" />
+                              <Tooltip text="Ctrl+Alt+Space" />
                            </tooltip>
                         </Button>
                         <Button fx:id="playButton" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#playpause" prefHeight="40.0" prefWidth="40.0">
@@ -105,7 +105,7 @@
                               <Insets />
                            </HBox.margin>
                            <tooltip>
-                              <Tooltip text="Ctrl+Alt+Space" />
+                              <Tooltip text="Ctrl+F" />
                            </tooltip>
                         </Button>
                      </children>
