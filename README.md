@@ -1,0 +1,1 @@
+# FastScribe is a working prototype of an application designed to streamline the process of transferring interviews recorded by journalists into text. This is a combination of an audio player equipped with an option of playback speed control and a simple text editor. There is also included a simple back-up system. The prototype requires refactoring.
